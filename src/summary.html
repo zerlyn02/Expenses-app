@@ -98,7 +98,7 @@
       } else {
         const noExpenseItem = document.createElement("li");
         noExpenseItem.classList.add("list-group-item", "text-muted");
-        noExpenseItem.textContent = `No expenses found for RM{type}.`;
+        noExpenseItem.textContent = `No expenses found for ${type}.`;
         expenseList.appendChild(noExpenseItem);
       }
     }
