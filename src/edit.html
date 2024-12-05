@@ -68,6 +68,7 @@
         // Display expense data
         row.innerHTML = `
           <div>
+            <strong>Date:</strong> ${expense.date} <br>
             <strong>Title:</strong> ${expense.title} <br>
             <strong>Amount:</strong> RM${expense.amount.toFixed(2)} <br>
             <strong>Description:</strong> ${expense.description || "N/A"} <br>
@@ -79,6 +80,10 @@
           </div>
           <div class="edit-section" id="edit-section-${index}">
             <form onsubmit="updateExpense(event, ${index})">
+              <div class="mb-3">
+                <label>Date:</label>
+                <input type="date" class="form-control" id="edit-date-${index}" value="${new Date().toISOString().split("T")[0]}" required>
+              </div>
               <div class="mb-2">
                 <label>Amount:</label>
                 <input type="number" class="form-control" id="edit-amount-${index}" value="${expense.amount}" required>
@@ -127,6 +132,7 @@
     function updateExpense(event, index) {
       event.preventDefault();
 
+      const date = document.getElementById(`edit-date-${index}`).value;
       const updatedAmount = parseFloat(document.getElementById(`edit-amount-${index}`).value);
       const updatedTitle = document.getElementById(`edit-title-${index}`).value;
       const updatedDescription = document.getElementById(`edit-description-${index}`).value;
@@ -134,6 +140,7 @@
 
       // Update expense in the array
       expenses[index] = {
+        date: date,
         amount: updatedAmount,
         title: updatedTitle,
         description: updatedDescription,
