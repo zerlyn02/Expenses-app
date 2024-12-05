@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Summary</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .expense-list {
+      margin-top: 20px;
+    }
+    .list-group-item {
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-4">
+    <div class="back-button mb-3">
+      <a href="index.html" class="btn btn-secondary">&larr; Back</a>
+    </div>
+    <h1 class="text-center mb-4 text-info">Summary</h1>
+    <canvas id="expenseChart" class="mt-4"></canvas>
+    <ul class="list-group mt-4" id="expenseList"></ul>
+  </div>
+
+  <script>
+    const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+    const expenseTotals = {
+      Food: 0,
+      Clothes: 0,
+      Entertainment: 0,
+      Groceries: 0,
+      Rental: 0,
+      Transport: 0,
+      Other: 0
+    };
+
+    expenses.forEach(expense => {
+      expenseTotals[expense.type] += parseFloat(expense.amount);
+    });
+
+    // Create a pie chart with the calculated totals
+    const ctx = document.getElementById('expenseChart').getContext('2d');
+    const expenseChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: Object.keys(expenseTotals),
+        datasets: [{
+          data: Object.values(expenseTotals),
+          backgroundColor: [
+            '#FF6384', // Food
+            '#36A2EB', // Clothes
+            '#FFCE56', // Entertainment
+            '#8E44AD', // Groceries
+            '#27AE60', // Rental
+            '#F39C12',  // Transport
+            '#4BC0C0' // Other
+          ]
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            display: true,
+            position: 'bottom',
+          }
+        },
+        onClick: (e, element) => {
+          if (element.length > 0) {
+            const index = element[0].index;
+            const type = expenseChart.data.labels[index];
+            showExpensesByType(type);
+          }
+        }
+      }
+    });
+
+    // Function to display the list of expenses for a selected type
+    function showExpensesByType(type) {
+      const expenseList = document.getElementById("expenseList");
+      expenseList.innerHTML = ""; // Clear existing list
+
+      const filteredExpenses = expenses.filter(expense => expense.type === type);
+
+      if (filteredExpenses.length > 0) {
+        filteredExpenses.forEach(expense => {
+          const listItem = document.createElement("li");
+          listItem.classList.add("list-group-item");
+          listItem.innerHTML = `
+            <strong>${expense.title}</strong>: RM${parseFloat(expense.amount).toFixed(2)}<br>
+            <small>${expense.description || "No description"}</small>
+          `;
+          expenseList.appendChild(listItem);
+        });
+      } else {
+        const noExpenseItem = document.createElement("li");
+        noExpenseItem.classList.add("list-group-item", "text-muted");
+        noExpenseItem.textContent = `No expenses found for RM{type}.`;
+        expenseList.appendChild(noExpenseItem);
+      }
+    }
+  </script>
+</body>
+</html>
