@@ -26,6 +26,7 @@
       <label for="month" class="form-label">Select Month</label>
       <input type="month" class="form-control" id="month" required>
     </div>
+    <p id="totalAmount" class="text-center"></p>
     <canvas id="expenseChart" width="400" height="400"></canvas>
     <ul id="expenseList" class="list-group mt-4"></ul>
   </div>
@@ -47,6 +48,7 @@
         Transport: 0,
         Other: 0
       };
+      let Amount = 0;
   
       // Filter expenses based on the selected month
       expenses.forEach(expense => {
@@ -54,11 +56,13 @@
         const expenseMonth = expenseDate.toISOString().slice(0, 7); // Extract YYYY-MM from the date
         if (expenseMonth === selectedMonth) {
           expenseTotals[expense.type] += parseFloat(expense.amount); // Add amount to the corresponding type
+          Amount += parseFloat(expense.amount); // Add amount to the total
         }
       });
   
       // Debug: Log the filtered totals
       console.log("Filtered Totals:", expenseTotals);
+      totalAmount=document.getElementById('totalAmount').innerHTML = `Total Amount: RM${Amount.toFixed(2)}`;
       
       if (window.expenseChart && typeof window.expenseChart.destroy === 'function') {
     window.expenseChart.destroy();
