@@ -1,26 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="index.css">
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="index.js"></script>
-  <title>Register</title>
+  <style>
+    .main-amount {
+        font-size: 2.5rem;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 20px;
+        color: #435c47;
+        border: 2px solid #435c47; 
+        padding: 10px; 
+        border-radius: 10px; 
+    }
+    .nav-images {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 50px;
+    }
+    .nav-images div {
+      text-align: center;
+      color: #435c47;
+    }
+    .nav-images img {
+      width: 80px;
+      height: 80px;
+      border: 3px solid #435c47;
+      border-radius: 50%;
+      padding: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      box-sizing: content-box;
+    }
+    .nav-images img:hover {
+      transform: scale(1.1);
+    }
+  </style>
 </head>
-
 <body>
-  <div class="container">
-    <h2>Register</h2>
-    <input type="text" id="registerUsername" placeholder="Enter Username">
-    <input type="password" id="registerPassword" placeholder="Enter Password">
-    <input type="password" id="confirmPassword" placeholder="Confirm Password">
-    <button onclick="registerUser()">Register</button>
-    <p id="registerMessage" class="message"></p>
-    <a href="login.html">Already have an account? Login</a>
-  </div>
-</body>
+    <div class="container">
+        <div id="total-amount" class="main-amount">Total Expenses: RM0.00</div>
+        <div class="nav-images">
+          <div>
+            <a href="add.html"><img src="images/add.png" alt="Add Expenses"></a>
+            <div>Add</div>
+          </div>
+          <div>
+            <a href="edit.html"><img src="images/edit.png" alt="Edit Expenses"></a>
+            <div>Edit</div>
+          </div>
+          <div>
+            <a href="summary.html"><img src="images/summary.png" alt="Summary"></a>
+            <div>Summary</div>
+          </div>
+        </div>
+      </div>
 
+  <script>
+    // Function to calculate total expenses
+    function calculateTotal() {
+      const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+      const total = expenses.reduce((sum, expense) => sum + parseFloat(expense.amount), 0);
+      document.getElementById("total-amount").innerText = `Total Expenses: RM${total.toFixed(2)}`;
+    }
+
+    // Call function
+    calculateTotal();
+  </script>
+</body>
 </html>
