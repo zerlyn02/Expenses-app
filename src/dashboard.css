@@ -1,0 +1,36 @@
+.main-amount {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+  color: #435c47;
+  border: 2px solid #435c47;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.nav-images {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 50px;
+}
+
+.nav-images div {
+  text-align: center;
+  color: #435c47;
+}
+
+.nav-images img {
+  width: 80px;
+  height: 80px;
+  border: 3px solid #435c47;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  box-sizing: content-box;
+}
+
+.nav-images img:hover {
+  transform: scale(1.1);
+}

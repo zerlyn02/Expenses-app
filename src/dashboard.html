@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body style="background-color:lightyellow">
+  <div class="container mt-5">
+    <div class="logout-button mb-3">
+      <a href="login.html" class="btn btn-danger">Logout</a>
+    </div>
+    <h1 class="text-center">Welcome to Expense Tracker</h1>
+  </div>
+  <div class="container">
+    <div id="total-amount" class="main-amount">Total Expenses: RM0.00</div>
+    <div class="nav-images">
+      <div style="align-items:center">
+        <a href="add.html"><img src="images/add.png" alt="Add Expenses"></a>
+        <div>Add</div>
+        <br>
+        <a href="edit.html"><img src="images/edit.png" alt="Edit Expenses"></a>
+        <div>Edit</div>
+        <br>
+        <a href="summary.html"><img src="images/summary.png" alt="Summary"></a>
+        <div>Summary</div>
+      </div>
+    </div>
+
+    <script>
+      // Function to calculate total expenses
+      function calculateTotal() {
+        const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+        const total = expenses.reduce((sum, expense) => sum + parseFloat(expense.amount), 0);
+        document.getElementById("total-amount").innerText = `Total Expenses: RM${total.toFixed(2)}`;
+      }
+
+      // Call function on page load
+      calculateTotal();
+    </script>
+</body>
+</html>
