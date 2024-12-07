@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,16 +8,17 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body>
+
+<body style="background-color: lightyellow">
   <div class="container mt-4">
     <div class="back-button mb-3">
-      <a href="index.html" class="btn btn-secondary">&larr; Back</a>
+      <a href="dashboard.html" class="btn btn-danger">&larr; Back</a>
     </div>
     <h1 class="text-center mb-4 text-success">Add Expense</h1>
     <form id="add-expense-form">
       <div class="mb-3">
         <label for="date" class="form-label">Date</label>
-        <input type="date" class="form-control" id="date" required>
+        <input type="date" class="form-control" id="date" placeholder="dd/mm/yyyy" required>
       </div>
       <div class="mb-3">
         <label for="amount" class="form-label">Amount</label>
@@ -28,21 +30,25 @@
       </div>
       <div class="mb-3">
         <label for="description" class="form-label">Description</label>
-        <textarea class="form-control" id="description" placeholder="Optional"></textarea>
+        <textarea class="form-control" id="description" placeholder="Enter description"></textarea>
       </div>
       <div class="mb-3">
         <label for="type" class="form-label">Type</label>
         <select class="form-control" id="type" required>
-          <option>Food</option>
-          <option>Clothes</option>
-          <option>Entertainment</option>
-          <option>Groceries</option>
-          <option>Rental</option>
-          <option>Transport</option>
-          <option>Other</option>
+          <option value="" disabled selected>Select here</option>
+          <option value="Food">Food</option>
+          <option value="Clothes">Clothes</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="Groceries">Groceries</option>
+          <option value="Rental">Rental</option>
+          <option value="Transport">Transport</option>
+          <option value="Other">Other</option>
         </select>
+
       </div>
       <button type="submit" class="btn btn-success w-100">Add Expense</button>
+      <br><br>
+      <button type="reset" class="btn btn-primary w-100">Reset</button>
     </form>
   </div>
 
@@ -65,7 +71,7 @@
 
   <script>
     const form = document.getElementById("add-expense-form");
-    form.addEventListener("submit", function(e) {
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
 
       const date = document.getElementById("date").value;
@@ -82,15 +88,14 @@
 
       // Save updated expenses back to local storage
       localStorage.setItem("expenses", JSON.stringify(expenses));
-      
+
       // Show modal
       const modal = new bootstrap.Modal(document.getElementById("addExpense"));
       modal.show();
-
       form.reset();
     });
 
-    
   </script>
 </body>
+
 </html>

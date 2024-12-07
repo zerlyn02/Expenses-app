@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,34 +9,47 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
+    .expense-list {
+      margin-top: 20px;
+    }
+
     .list-group-item {
       font-size: 16px;
     }
+
+    #expenseChart {
+      max-width: 500px;
+      max-height: 500px;
+      width: 100%;
+      height: 100%;
+      margin: 0 auto;
+    }
   </style>
 </head>
-<body>
+
+<body style="background-color: lightyellow">
   <div class="container mt-4">
     <div class="back-button mb-3">
-      <a href="index.html" class="btn btn-secondary">&larr; Back</a>
+      <a href="dashboard.html" class="btn btn-danger">&larr; Back</a>
     </div>
     <h1 class="text-center mb-4 text-success">Expense Summary</h1>
     <div class="mb-3">
-      <label for="month" class="form-label">Select Month</label>
+      <label for="month" class="form-label" style="font-weight:bold;">Select Month</label>
       <input type="month" class="form-control" id="month" required>
     </div>
-    <p id="totalAmount" class="text-center"></p>
+    <p id="totalAmount" class="text-center" style="font-weight:bold;"></p>
     <canvas id="expenseChart" width="400" height="400"></canvas>
-    <ul id="expenseList" class="list-group mt-4" style="display: none;"></ul>
+    <ul id="expenseList" class="list-group mt-4"></ul>
   </div>
 
   <script>
     let expenses = [];
-    let selectedMonth = '';
 
-    document.getElementById('month').addEventListener('change', function() {
-      selectedMonth = this.value;
-      expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+    document.getElementById('month').addEventListener('change', function () {
+      const selectedMonth = this.value; // Get the selected month (YYYY-MM format)
+      expenses = JSON.parse(localStorage.getItem('expenses')) || []; // Load expenses from localStorage
 
+      // Initialize totals for each expense type
       const expenseTotals = {
         Food: 0,
         Clothes: 0,
@@ -45,39 +59,37 @@
         Transport: 0,
         Other: 0
       };
+      let Amount = 0;
 
-      let Amount = 0; // Declare Amount outside the loop
-
+      // Filter expenses based on the selected month
       expenses.forEach(expense => {
         const expenseDate = new Date(expense.date);
-        const expenseMonth = expenseDate.toISOString().slice(0, 7);
+        const expenseMonth = expenseDate.toISOString().slice(0, 7); // Extract YYYY-MM from the date
         if (expenseMonth === selectedMonth) {
-          expenseTotals[expense.type] += parseFloat(expense.amount);
+          expenseTotals[expense.type] += parseFloat(expense.amount); // Add amount to the corresponding type
           Amount += parseFloat(expense.amount); // Add amount to the total
         }
       });
 
       // Debug: Log the filtered totals
-      //console.log("Filtered Totals:", expenseTotals);
-      document.getElementById('totalAmount').innerHTML = `Total Amount: RM${Amount.toFixed(2)}`;
+      console.log("Filtered Totals:", expenseTotals);
+      totalAmount = document.getElementById('totalAmount').innerHTML = `Total Amount: RM${Amount.toFixed(2)}`;
 
-      // Clear and hide the expense list when the month is changed
-      const expenseList = document.getElementById('expenseList');
-      expenseList.innerHTML = '';
-      expenseList.style.display = 'none';
-      
       if (window.expenseChart && typeof window.expenseChart.destroy === 'function') {
         window.expenseChart.destroy();
       }
-
       // Create or update the pie chart with the calculated totals
       const ctx = document.getElementById('expenseChart').getContext('2d');
+
+      // Create a new chart if it doesn't exist
       window.expenseChart = new Chart(ctx, {
         type: 'pie',
         data: {
-          labels: Object.keys(expenseTotals),
+
+          labels: Object.keys(expenseTotals), // Expense categories
           datasets: [{
-            data: Object.values(expenseTotals),
+            label: 'Total Expenses (RM)',
+            data: Object.values(expenseTotals), // Total amounts for each category
             backgroundColor: [
               '#FF6384', // Food
               '#36A2EB', // Clothes
@@ -94,37 +106,29 @@
             legend: {
               display: true,
               position: 'bottom',
+
             }
           },
-          onClick: (e, elements) => {
-            if (elements.length > 0) {
-              const index = elements[0].index;
+
+          onClick: (e, element) => {
+            if (element.length > 0) {
+              const index = element[0].index;
               const type = window.expenseChart.data.labels[index];
-              showExpensesByType(type, selectedMonth);
+              showExpensesByType(type);
             }
           }
         }
       });
-    });
+    }
+    );
 
-    // Function to display the list of expenses for a selected type and month
-    function showExpensesByType(type, month) {
+    // Function to display the list of expenses for a selected type
+    function showExpensesByType(type) {
       const expenseList = document.getElementById("expenseList");
       expenseList.innerHTML = ""; // Clear existing list
-      expenseList.style.display = "block"; // Show the expense list
 
-      // Debug: Log the type and month being filtered
-      //console.log("Filtering expenses for type:", type, "and month:", month);
-
-      // Filter expenses based on the selected type and month
-      const filteredExpenses = expenses.filter(expense => {
-        const expenseDate = new Date(expense.date);
-        const expenseMonth = expenseDate.toISOString().slice(0, 7);
-        return expense.type === type && expenseMonth === month;
-      });
-
-      // Debug: Log the filtered expenses
-      //console.log("Filtered Expenses:", filteredExpenses);
+      // Filter expenses based on the selected type
+      const filteredExpenses = expenses.filter(expense => expense.type === type);
 
       if (filteredExpenses.length > 0) {
         // Display each expense
@@ -142,10 +146,11 @@
         // Display a message if no expenses are found for the selected type
         const noExpenseItem = document.createElement("li");
         noExpenseItem.classList.add("list-group-item", "text-muted");
-        noExpenseItem.textContent = `No expenses found for ${type} in ${month}.`;
+        noExpenseItem.textContent = `No expenses found for ${type}.`;
         expenseList.appendChild(noExpenseItem);
       }
     }
   </script>
 </body>
+
 </html>

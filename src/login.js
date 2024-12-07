@@ -1,25 +1,31 @@
-$(document).ready(function () {
-    // Initialize dummy credentials in Local Storage
-    if (!localStorage.getItem('username') && !localStorage.getItem('password')) {
-        localStorage.setItem('username', 'admin');
-        localStorage.setItem('password', 'password123');
-    }
+function loginUser() {
+  const username = document.getElementById("loginUsername").value.trim();
+  const password = document.getElementById("loginPassword").value.trim();
+  const messageElement = document.getElementById("loginMessage");
 
-    // Handle login form submission
-    $('#login-form').on('submit', function (e) {
-        e.preventDefault();
-        
-        const enteredUsername = $('#username').val();
-        const enteredPassword = $('#password').val();
-        
-        const storedUsername = localStorage.getItem('username');
-        const storedPassword = localStorage.getItem('password');
-        
-        if (enteredUsername === storedUsername && enteredPassword === storedPassword) {
-            localStorage.setItem('isLoggedIn', 'true');
-            window.location.href = 'index.html'; // Redirect to the dashboard
-        } else {
-            $('#login-message').text('Invalid username or password!');
-        }
-    });
-});
+  if (username === "" || password === "") {
+    messageElement.textContent = "Please fill in all fields.";
+    messageElement.className = "message error";
+    return;
+  }
+
+  // Retrieve data from localStorage
+  const storedPassword = localStorage.getItem(username);
+  if (storedPassword && storedPassword === password) {
+    messageElement.textContent = "Login successful! Redirecting to dashboard...";
+    messageElement.className = "message success";
+
+    // Simulate dashboard redirection
+    setTimeout(() => {
+      alert("Welcome to the dashboard!");
+      window.location.href = 'dashboard.html';
+    }, 1000);
+  } else {
+    messageElement.textContent = "Invalid username or password.";
+    messageElement.className = "message error";
+  }
+
+  // Clear inputs
+  document.getElementById("loginUsername").value = "";
+  document.getElementById("loginPassword").value = "";
+}
