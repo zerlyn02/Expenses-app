@@ -11,6 +11,18 @@
     .list-group-item {
       font-size: 16px;
     }
+
+    #expenseChart {
+      max-width: 500px;
+      max-height: 500px;
+      width: 100%;
+      height: 100%;
+      margin: 0 auto;
+    }
+
+    body{
+      background-color: lightyellow;
+    }
   </style>
 </head>
 <body>
@@ -53,7 +65,7 @@
         const expenseMonth = expenseDate.toISOString().slice(0, 7);
         if (expenseMonth === selectedMonth) {
           expenseTotals[expense.type] += parseFloat(expense.amount);
-          Aumont += parseFloat(expense.amount); // Add amount to the total
+          Amount += parseFloat(expense.amount); // Add amount to the total
         }
       });
 
